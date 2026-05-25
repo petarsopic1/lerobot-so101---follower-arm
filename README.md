@@ -75,7 +75,7 @@ This prevents structural jerks, eliminates collision paths, and ensures perfectl
 ### 1. Clone & Set Up Python Environment
 ```bash
 cd ~
-git clone [https://github.com/petarsopic1/lerobot-so101---follower-arm.git](https://github.com/petarsopic1/lerobot-so101---follower-arm.git) robot
+git clone https://github.com/petarsopic1/lerobot-so101---follower-arm.git robot
 cd robot
 python3 -m venv .venv
 source .venv/bin/activate
@@ -92,8 +92,10 @@ Paste the copied JSON payload into the text area and select Import to New Flow.
 
 Click Deploy in the top right corner.
 
+
 3. Hardware Hookup
 Connect your STS3215 serial bus smart servos through your dedicated hardware interface adapter into any available USB port on the Raspberry Pi. The driver handles port allocation automatically.
+
 
 🛠️ Tech Stack
 Hardware Compute: Raspberry Pi (Linux ARM architecture)
