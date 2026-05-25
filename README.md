@@ -81,6 +81,8 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
+```
+
 2. Deploy the SCADA Dashboard
 Open the file node_red_flow.json in a text editor and copy its entire content.
 
