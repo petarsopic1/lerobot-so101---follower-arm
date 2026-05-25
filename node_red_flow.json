@@ -1,0 +1,421 @@
+[
+    {
+        "id": "dbabb75e0b0c4959",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "14f540200907321b",
+        "type": "ui_button",
+        "z": "dbabb75e0b0c4959",
+        "name": "",
+        "group": "1edbf63a783227a3",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Torque off",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 160,
+        "y": 100,
+        "wires": [
+            [
+                "309f135185aa15d1"
+            ]
+        ]
+    },
+    {
+        "id": "309f135185aa15d1",
+        "type": "exec",
+        "z": "dbabb75e0b0c4959",
+        "command": "/home/pi/robot/.venv/bin/python3 /home/pi/robot/kocnice.py",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 560,
+        "y": 100,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "b741a8cdaf8e98cc",
+        "type": "ui_button",
+        "z": "dbabb75e0b0c4959",
+        "name": "",
+        "group": "1edbf63a783227a3",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Snimi točku",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "snimi",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 170,
+        "y": 180,
+        "wires": [
+            [
+                "2b82f00a1a6d814f"
+            ]
+        ]
+    },
+    {
+        "id": "2b82f00a1a6d814f",
+        "type": "exec",
+        "z": "dbabb75e0b0c4959",
+        "command": "cd /home/pi/robot && /home/pi/robot/.venv/bin/python3 /home/pi/robot/uslikaj_tocku.py",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 700,
+        "y": 180,
+        "wires": [
+            [
+                "ed3392147492ce83"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "ed3392147492ce83",
+        "type": "function",
+        "z": "dbabb75e0b0c4959",
+        "name": "Dodaj u sekvencu",
+        "func": "// 1. Razbijamo sav dobiveni tekst na pojedinačne linije\nlet linije = msg.payload.trim().split('\\n');\n\n// 2. Uzimamo isključivo zadnju liniju (tamo gdje su naši čisti brojevi)\nlet zadnjaLinija = linije[linije.length - 1].trim();\n\n// 3. Pretvaramo tu zadnju liniju u listu brojeva\nlet novaTocka = zadnjaLinija.split(',').map(Number);\n\n// Sigurnosna provjera: ako linija ne sadrži točno 6 brojeva, ignoriraj je\nif (novaTocka.length === 6 && !novaTocka.includes(NaN)) {\n\n    // 4. Dohvati trenutnu listu iz zajedničke memorije\n    let sekvenca = flow.get('moja_sekvenca') || [];\n\n    // 5. Dodaj novu čistu točku na kraj liste\n    sekvenca.push(novaTocka);\n\n    // 6. Spremi natrag u zajedničku memoriju\n    flow.set('moja_sekvenca', sekvenca);\n\n    // 7. NA EKRAN ŠALJEMO SAMO KRATKI TEKST (brojevi ostaju skriveni u memoriji)\n    let brojTocke = sekvenca.length;\n    msg.payload = \"Točka \" + brojTocke + \" uspješno zapisana!\";\n    return msg;\n}\n\n// Ako je linija bila tekstualno smeće, ne šalji ništa dalje\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
+        "y": 160,
+        "wires": [
+            [
+                "9bf41f8d992da95f"
+            ]
+        ]
+    },
+    {
+        "id": "9bf41f8d992da95f",
+        "type": "ui_text",
+        "z": "dbabb75e0b0c4959",
+        "group": "1edbf63a783227a3",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Snimljene pozicije",
+        "format": "{{msg.payload | json}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1470,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "c3de91d62ff9215f",
+        "type": "ui_button",
+        "z": "dbabb75e0b0c4959",
+        "name": "",
+        "group": "1edbf63a783227a3",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Resetiraj tocke",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "clear",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 180,
+        "y": 280,
+        "wires": [
+            [
+                "bedf5b22331271bc"
+            ]
+        ]
+    },
+    {
+        "id": "bedf5b22331271bc",
+        "type": "function",
+        "z": "dbabb75e0b0c4959",
+        "name": "Isprazni memoriju",
+        "func": "// 1. Potpuno brišemo sekvencu iz zajedničke memorije\nflow.set('moja_sekvenca', []);\n\n// 2. Šaljemo jasnu tekstualnu poruku na ekran koja briše stari natpis\nmsg.payload = \"Sve točke su obrisane. Robot je spreman za novo snimanje.\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 280,
+        "wires": [
+            [
+                "9bf41f8d992da95f"
+            ]
+        ]
+    },
+    {
+        "id": "37584432c042ddb7",
+        "type": "ui_slider",
+        "z": "dbabb75e0b0c4959",
+        "name": "",
+        "label": "Brzina",
+        "tooltip": "",
+        "group": "1edbf63a783227a3",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": "100",
+        "max": "1300",
+        "step": "50",
+        "className": "",
+        "x": 150,
+        "y": 380,
+        "wires": [
+            [
+                "ac8ce1da62e181d9"
+            ]
+        ]
+    },
+    {
+        "id": "d594109b0bc7191f",
+        "type": "ui_slider",
+        "z": "dbabb75e0b0c4959",
+        "name": "",
+        "label": "Akceleracija",
+        "tooltip": "",
+        "group": "1edbf63a783227a3",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": "10",
+        "max": "200",
+        "step": "5",
+        "className": "",
+        "x": 170,
+        "y": 440,
+        "wires": [
+            [
+                "ac715c5030261813"
+            ]
+        ]
+    },
+    {
+        "id": "ac8ce1da62e181d9",
+        "type": "function",
+        "z": "dbabb75e0b0c4959",
+        "name": "Zapisi brzinu",
+        "func": "flow.set('brzina', msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ac715c5030261813",
+        "type": "function",
+        "z": "dbabb75e0b0c4959",
+        "name": "Zapisi ubrzanje",
+        "func": "flow.set('ubrzanje', msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e7fe19b48108dc81",
+        "type": "ui_button",
+        "z": "dbabb75e0b0c4959",
+        "name": "",
+        "group": "1edbf63a783227a3",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Pokreni ruku",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "kreni",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 170,
+        "y": 500,
+        "wires": [
+            [
+                "2f30c2f8d39a91b3"
+            ]
+        ]
+    },
+    {
+        "id": "2f30c2f8d39a91b3",
+        "type": "function",
+        "z": "dbabb75e0b0c4959",
+        "name": "Zapakiraj sve za robot",
+        "func": "// 1. Izvlačimo sve podatke iz zajedničke memorije\nlet sekvenca = flow.get('moja_sekvenca') || [];\nlet brzina = flow.get('brzina') || 500;       // Ako klizač nije diran, zadano je 500\nlet ubrzanje = flow.get('ubrzanje') || 50;    // Ako klizač nije diran, zadano je 50\n\n// Sigurnosna provjera: Ako nema snimljenih točaka, ne idemo dalje\nif (sekvenca.length === 0) {\n    node.error(\"Nema snimljenih točaka za izvođenje pokreta!\");\n    return null;\n}\n\n// 2. Slažemo sve u jedan zajednički objekt (spojeno ime varijable)\nlet paketPodataka = {\n    brzina: brzina,\n    ubrzanje: ubrzanje,\n    tocke: sekvenca\n};\n\n// 3. Pretvaramo taj paket u čist tekst (JSON format)\nmsg.payload = JSON.stringify(paketPodataka);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 500,
+        "wires": [
+            [
+                "0cdf6833645a2f6e"
+            ]
+        ]
+    },
+    {
+        "id": "0cdf6833645a2f6e",
+        "type": "file",
+        "z": "dbabb75e0b0c4959",
+        "name": "",
+        "filename": "/home/pi/robot/plan_gibanja.json",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 730,
+        "y": 500,
+        "wires": [
+            [
+                "6ecaab50471f3b98"
+            ]
+        ]
+    },
+    {
+        "id": "6ecaab50471f3b98",
+        "type": "exec",
+        "z": "dbabb75e0b0c4959",
+        "command": "/home/pi/robot/.venv/bin/python3 /home/pi/robot/pokreni_robot.py",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 1220,
+        "y": 500,
+        "wires": [
+            [
+                "14f7de0369fd51c4"
+            ],
+            [
+                "14f7de0369fd51c4"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "14f7de0369fd51c4",
+        "type": "debug",
+        "z": "dbabb75e0b0c4959",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1580,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "1edbf63a783227a3",
+        "type": "ui_group",
+        "name": "Kontrola robota",
+        "tab": "42e8962faf9dddf9",
+        "order": 1,
+        "disp": true,
+        "width": 10,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "42e8962faf9dddf9",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "fc24420c0a532028",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
