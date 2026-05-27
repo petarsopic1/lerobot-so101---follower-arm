@@ -3,7 +3,7 @@ import serial
 
 class ST3215:
     def __init__(self, port="/dev/ttyACM1", baudrate=1000000):
-        # Prvo pokušavamo port koji je primarno zadan (bilo ACM1 ili ACM0)
+        
         try:
             self.ser = serial.Serial(port, baudrate, timeout=1)
             print(f"Driver: Uspješno spojen na {port}!")
@@ -12,7 +12,7 @@ class ST3215:
         except Exception:
             pass
 
-        # Ako je primarni pao, automatski prebacujemo na onaj drugi
+        
         rezervni = "/dev/ttyACM0" if "ACM1" in port else "/dev/ttyACM1"
         try:
             self.ser = serial.Serial(rezervni, baudrate, timeout=1)
