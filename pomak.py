@@ -1,10 +1,10 @@
 import time
 from sts3215 import ST3215
 
-# Pokrećemo spajanje (driver sam traži ACM1 ili ACM0)
+
 ruka = ST3215()
 
-# Početno stanje stavljamo na None, očitat ćemo ga uživo s robota sekundu kasnije
+
 zadnja_pozicija = None
 
 def pomak(id1, id2, id3, id4, id5, gripper):
@@ -19,25 +19,25 @@ def pomak(id1, id2, id3, id4, id5, gripper):
     
     nova_pozicija = [id1, id2, id3, id4, id5, gripper]
     
-    # --- PAMETNI START: Ako je ovo prva točka, pročitaj stvarno stanje s motora ---
+    
     if zadnja_pozicija is None:
         stvarno_stanje = []
         for servo_id in range(1, 7):
             poz = ruka.read_position(servo_id)
             if poz is None:
-                poz = nova_pozicija[servo_id - 1] # Ako neki zakaže, uzmi ciljnu kao rezervu
+                poz = nova_pozicija[servo_id - 1] 
             stvarno_stanje.append(poz)
             time.sleep(0.002)
         zadnja_pozicija = stvarno_stanje
     
-    # Tražimo najveći put među svih 6 motora
+    
     najveci_put = 0
     for stari, novi in zip(zadnja_pozicija, nova_pozicija):
         razlika = abs(novi - stari)
         if razlika > najveci_put:
             najveci_put = razlika
             
-    # Pakiramo naredbe za ID1 do ID6
+   
     slanje = []
     for i, kut in enumerate(nova_pozicija, 1):
         slanje.append({
@@ -49,7 +49,7 @@ def pomak(id1, id2, id3, id4, id5, gripper):
         
     ruka.write_synchronous(slanje)
     
-    # Proračun čekanja
+    
     if najveci_put > 0:
         potrebno_vrijeme = (najveci_put / BRZINA_KRETANJA) + 0.05
     else:
@@ -64,9 +64,7 @@ def pomak(id1, id2, id3, id4, id5, gripper):
 try:
     print("Pokrećem sekvencu ruke i hvataljke...")
 
-    # =================================================================
-    # OVDJE SADA LIJEPIŠ NOVE LINIJE SA 6 BROJEVA IZ 'citaj.py'
-    # =================================================================
+    # ==============================================================
     
     pomak(1867, 1645, 1944, 2456, 2963, 2420)
     pomak(2339, 2475, 1998, 1243, 2963, 2420)
