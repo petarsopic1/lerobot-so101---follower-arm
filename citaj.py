@@ -1,7 +1,7 @@
 import time
 from sts3215 import ST3215
 
-# Pokrećemo spajanje (driver sam traži ACM1 ili ACM0)
+
 ruka = ST3215()
 
 print("--- SNIMANJE CIJELE SEKVENCE NA TIPKU ---")
@@ -12,7 +12,7 @@ print("2. Stisni [ ENTER ] da privremeno snimiš tu točku.")
 print("3. Kad završiš cijelu putanju, upiši [ q ] i stisni Enter.")
 print("-" * 50 + "\n")
 
-# Gasimo torque na svih 6 motora
+
 for servo_id in range(1, 7):
     ruka.set_torque(servo_id, enable=False)
 
